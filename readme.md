@@ -5,3 +5,9 @@ Step 1
 PORT=5000
 DATABASE_URL= your database url here
 BCRYPT_SALT_ROUNDS=12
+
+Step 2
+
+# Install all necessary dependency
+
+npm install
