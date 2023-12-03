@@ -18,7 +18,7 @@ router.put('/:userId', UserControllers.updateSingleUser);
 // Delete a user
 router.delete('/:userId', UserControllers.deleteSingleUser);
 
-// Add New Product in Order
+// Add a New Product in Order
 router.put('/:userId/orders', UserControllers.addNewProduct);
 
 // Retrieve all orders for a specific user
