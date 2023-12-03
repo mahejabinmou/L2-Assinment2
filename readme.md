@@ -11,3 +11,15 @@ Step 2
 # Install all necessary dependency
 
 npm install
+
+Step 3
+
+# Run the Project
+
+for development
+npm run start:dev
+or
+
+for production
+npm run build
+npm run start:prod
