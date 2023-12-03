@@ -24,7 +24,7 @@ router.put('/:userId/orders', UserControllers.addNewProduct);
 // Retrieve all orders for a specific user
 router.get('/:userId/orders', UserControllers.getAllOrdersFromUser);
 
-// Calculate Total Price of Orders for a Specific User
+// Calculate Total Price of Orders for a Specific Users
 router.get(
   '/:userId/orders/total-price',
   UserControllers.getTotalOrdersPriceByUser,
