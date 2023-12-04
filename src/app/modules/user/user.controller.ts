@@ -5,7 +5,7 @@ import userValidationSchema, {
 } from './user.validation';
 import { TUser } from './user.model';
 
-//create a new user
+//create a new user for
 const createUser = async (req: Request, res: Response) => {
   try {
     const { user: userData } = req.body;
