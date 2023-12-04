@@ -13,8 +13,10 @@ app.use((0, cors_1.default)());
 //application routes
 app.use('/api/users', user_route_1.UserRoutes);
 const getAController = (req, res) => {
-    const a = 10;
-    res.send(a);
+    res.status(200).json({
+        success: true,
+        message: 'Welcome to User Server',
+    });
 };
 app.get('/', getAController);
 exports.default = app;
