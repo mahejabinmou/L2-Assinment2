@@ -3,38 +3,37 @@ import { Address, FullName, Orders, User, UserModel } from './user.interface';
 import bcrypt from 'bcrypt';
 import config from '../../config';
 
-const fullNameSchema = new Schema<FullName>({
-  firstName: {
-    type: String,
+const fullNameSchema = new Schema<FullName>(
+  {
+    firstName: { type: String },
+    lastName: { type: String },
   },
-  lastName: {
-    type: String,
+  {
+    _id: false,
   },
-});
+);
 
-const ordersSchema = new Schema<Orders>({
-  productName: {
-    type: String,
+const ordersSchema = new Schema<Orders>(
+  {
+    productName: { type: String },
+    price: { type: Number },
+    quantity: { type: Number },
   },
-  price: {
-    type: Number,
+  {
+    _id: false,
   },
-  quantity: {
-    type: Number,
-  },
-});
+);
 
-const addressSchema = new Schema<Address>({
-  street: {
-    type: String,
+const addressSchema = new Schema<Address>(
+  {
+    street: { type: String },
+    city: { type: String },
+    country: { type: String },
   },
-  city: {
-    type: String,
+  {
+    _id: false,
   },
-  country: {
-    type: String,
-  },
-});
+);
 
 // const hobbiesSchema = new Schema<Hobbies>([{ type: String }]);
 
