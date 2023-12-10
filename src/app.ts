@@ -3,18 +3,20 @@ import cors from 'cors';
 import { UserRoutes } from './app/modules/user/user.route';
 const app: Application = express();
 
-//parser
+// parsers
 app.use(express.json());
 app.use(cors());
 
-//application routes
+// application routes
 app.use('/api/users', UserRoutes);
-const getAController = (req: Request, res: Response) => {
+
+const serverController = (req: Request, res: Response) => {
   res.status(200).json({
     success: true,
     message: 'Welcome to User Server',
   });
 };
 
-app.get('/', getAController);
+app.get('/', serverController);
+
 export default app;

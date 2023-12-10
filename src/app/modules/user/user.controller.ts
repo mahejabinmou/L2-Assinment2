@@ -1,33 +1,33 @@
 import { Request, Response } from 'express';
 import { UserServices } from './user.service';
-import userValidationSchema, {
-  ordersValidationSchema,
-} from './user.validation';
-import { TUser } from './user.model';
+import userValidationSchema, { orderValidationSchema } from './user.validation';
+import { User } from './user.model';
 
-//create a new user for
+// Create a new user
 const createUser = async (req: Request, res: Response) => {
   try {
-    const { user: userData } = req.body;
-    //data validation using zod
-    const zodParseData = userValidationSchema.parse(userData);
+    const userData = req.body;
+    // data validation using zod
+    const zodParsedData = userValidationSchema.parse(userData);
 
-    //will call service function to send this data
-    const result = await UserServices.createUserIntoDB(zodParseData);
-
-    //send response
+    const result = await UserServices.createUserIntoDB(zodParsedData);
 
     res.status(200).json({
       success: true,
-      message: 'User  created successfully',
+      message: 'User created successfully!',
       data: result,
     });
-  } catch (err) {
-    console.log(err);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    res.status(500).json({
+      success: false,
+      message: error.message || 'Something went wrong',
+      error: error,
+    });
   }
 };
 
-//all user
+// Retrieve a list of all users
 const getAllUsers = async (req: Request, res: Response) => {
   try {
     const result = await UserServices.getAllUsersFromDB();
@@ -47,15 +47,26 @@ const getAllUsers = async (req: Request, res: Response) => {
   }
 };
 
-//single user by id
-const getSingleUsers = async (req: Request, res: Response) => {
+// Retrieve a specific user by ID
+const getSingleUser = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
-    const result = await UserServices.getSingleUsersFromDB(Number(userId));
-
+    // check user exists or not
+    const userIsExists = await User.isUserExists(Number(userId));
+    if (!userIsExists) {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found',
+        error: {
+          code: 404,
+          description: 'User not found!',
+        },
+      });
+    }
+    const result = await UserServices.getSingleUserFromDB(Number(userId));
     res.status(200).json({
       success: true,
-      message: 'Users fetched successfully!',
+      message: 'User fetched successfully!',
       data: result,
     });
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -74,7 +85,7 @@ const updateSingleUser = async (req: Request, res: Response) => {
     const { userId } = req.params;
     const userData = req.body;
     // check user exists or not
-    const userIsExists = await TUser.isUserExists(Number(userId));
+    const userIsExists = await User.isUserExists(Number(userId));
     if (!userIsExists) {
       return res.status(404).json({
         success: false,
@@ -109,7 +120,7 @@ const deleteSingleUser = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
     // check user exists or not
-    const userIsExists = await TUser.isUserExists(Number(userId));
+    const userIsExists = await User.isUserExists(Number(userId));
     if (!userIsExists) {
       return res.status(404).json({
         success: false,
@@ -137,12 +148,13 @@ const deleteSingleUser = async (req: Request, res: Response) => {
   }
 };
 
+// Add New Product in Order
 const addNewProduct = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
     const userData = req.body;
     // check user exists or not
-    const userIsExists = await TUser.isUserExists(Number(userId));
+    const userIsExists = await User.isUserExists(Number(userId));
     if (!userIsExists) {
       return res.status(404).json({
         success: false,
@@ -155,7 +167,7 @@ const addNewProduct = async (req: Request, res: Response) => {
     }
 
     // data validation using zod
-    const zodParsedData = ordersValidationSchema.parse(userData);
+    const zodParsedData = orderValidationSchema.parse(userData);
 
     await UserServices.addNewProductInUserIntoDb(Number(userId), zodParsedData);
 
@@ -179,7 +191,7 @@ const getAllOrdersFromUser = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
     // check user exists or not
-    const userIsExists = await TUser.isUserExists(Number(userId));
+    const userIsExists = await User.isUserExists(Number(userId));
     if (!userIsExists) {
       return res.status(404).json({
         success: false,
@@ -213,7 +225,7 @@ const getTotalOrdersPriceByUser = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
     // check user exists or not
-    const userIsExists = await TUser.isUserExists(Number(userId));
+    const userIsExists = await User.isUserExists(Number(userId));
     if (!userIsExists) {
       return res.status(404).json({
         success: false,
@@ -245,10 +257,11 @@ const getTotalOrdersPriceByUser = async (req: Request, res: Response) => {
     });
   }
 };
+
 export const UserControllers = {
   createUser,
   getAllUsers,
-  getSingleUsers,
+  getSingleUser,
   updateSingleUser,
   deleteSingleUser,
   addNewProduct,

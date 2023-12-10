@@ -1,9 +1,15 @@
 import { Schema, model } from 'mongoose';
-import { Address, FullName, Orders, User, UserModel } from './user.interface';
-import bcrypt from 'bcrypt';
+import {
+  TOrder,
+  TUser,
+  TUserAddress,
+  TUserName,
+  UserModel,
+} from './user.interface';
 import config from '../../config';
+import bcrypt from 'bcrypt';
 
-const fullNameSchema = new Schema<FullName>(
+const userNameSchema = new Schema<TUserName>(
   {
     firstName: { type: String },
     lastName: { type: String },
@@ -13,18 +19,7 @@ const fullNameSchema = new Schema<FullName>(
   },
 );
 
-const ordersSchema = new Schema<Orders>(
-  {
-    productName: { type: String },
-    price: { type: Number },
-    quantity: { type: Number },
-  },
-  {
-    _id: false,
-  },
-);
-
-const addressSchema = new Schema<Address>(
+const userAddressSchema = new Schema<TUserAddress>(
   {
     street: { type: String },
     city: { type: String },
@@ -35,23 +30,33 @@ const addressSchema = new Schema<Address>(
   },
 );
 
-const userSchema = new Schema<User, UserModel>({
+const orderSchema = new Schema<TOrder>(
+  {
+    productName: { type: String },
+    price: { type: Number },
+    quantity: { type: Number },
+  },
+  {
+    _id: false,
+  },
+);
+
+const userSchema = new Schema<TUser, UserModel>({
   userId: { type: Number, unique: true },
   username: { type: String, unique: true },
   password: { type: String, select: false },
-  fullName: fullNameSchema,
+  fullName: { type: userNameSchema },
   age: { type: Number },
   email: { type: String },
   isActive: { type: Boolean },
-  hobbies: [{ type: String }],
-  address: addressSchema,
-  orders: [ordersSchema],
+  hobbies: { type: [String] },
+  address: { type: userAddressSchema },
+  orders: { type: [orderSchema] },
 });
 
 userSchema.pre('save', async function (next) {
   // eslint-disable-next-line @typescript-eslint/no-this-alias
   const user = this; //doc
-
   //hashing password and save into DB
   user.password = await bcrypt.hash(
     user.password,
@@ -59,19 +64,18 @@ userSchema.pre('save', async function (next) {
   );
   next();
 });
-
 // delete password for not showing in response
 userSchema.methods.toJSON = function () {
   const user = this.toObject();
   delete user.password;
   return user;
 };
+
 // creating custom static method
 userSchema.statics.isUserExists = async function (userId: number) {
-  const existingUser = await TUser.findOne({ userId });
+  const existingUser = await User.findOne({ userId });
 
   return existingUser;
 };
 
-export const TUser = model<User, UserModel>('TUser', userSchema);
-// export const UserModel = model<User>('User', userSchema);
+export const User = model<TUser, UserModel>('User', userSchema);

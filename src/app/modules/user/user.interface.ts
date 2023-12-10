@@ -1,37 +1,36 @@
 import { Model } from 'mongoose';
-//for
-export type FullName = {
+
+export type TUserName = {
   firstName: string;
   lastName: string;
 };
 
-export type Address = {
+export type TUserAddress = {
   street: string;
   city: string;
   country: string;
 };
 
-export type Orders = {
+export type TOrder = {
   productName: string;
   price: number;
   quantity: number;
 };
 
-export type User = {
+export type TUser = {
   userId: number;
   username: string;
   password: string;
-  fullName: FullName;
+  fullName: TUserName;
   age: number;
   email: string;
   isActive: boolean;
   hobbies: string[];
-  address: Address;
-  orders?: Orders[];
+  address: TUserAddress;
+  orders?: TOrder[];
 };
 
-//for creating static
-export interface UserModel extends Model<User> {
+export interface UserModel extends Model<TUser> {
   // eslint-disable-next-line no-unused-vars
-  isUserExists(userId: number): Promise<User | null>;
+  isUserExists(userId: number): Promise<TUser | null>;
 }

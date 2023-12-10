@@ -1,33 +1,33 @@
 import { z } from 'zod';
 
-const fullNameValidationSchema = z.object({
+const userNameValidationSchema = z.object({
   firstName: z.string(),
   lastName: z.string(),
 });
 
-export const ordersValidationSchema = z.object({
-  productName: z.string(),
-  price: z.number(),
-  quantity: z.number(),
-});
-
-const addressValidationSchema = z.object({
+const userAddressValidationSchema = z.object({
   street: z.string(),
   city: z.string(),
   country: z.string(),
 });
 
+export const orderValidationSchema = z.object({
+  productName: z.string(),
+  price: z.number(),
+  quantity: z.number(),
+});
+
 const userValidationSchema = z.object({
-  userId: z.number().positive(),
+  userId: z.number(),
   username: z.string(),
   password: z.string(),
-  age: z.number().positive(),
+  fullName: userNameValidationSchema,
+  age: z.number(),
   email: z.string().email(),
-  hobbies: z.array(z.string()),
   isActive: z.boolean(),
-  fullName: fullNameValidationSchema,
-  orders: z.array(ordersValidationSchema).optional(),
-  address: addressValidationSchema,
+  hobbies: z.array(z.string()),
+  address: userAddressValidationSchema,
+  orders: z.array(orderValidationSchema).optional(),
 });
 
 export default userValidationSchema;
