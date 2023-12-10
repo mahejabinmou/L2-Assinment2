@@ -5,16 +5,16 @@ export type FullName = {
   lastName: string;
 };
 
-export type Orders = {
-  productName: string;
-  price: number;
-  quantity: number;
-};
-
 export type Address = {
   street: string;
   city: string;
   country: string;
+};
+
+export type Orders = {
+  productName: string;
+  price: number;
+  quantity: number;
 };
 
 export type User = {

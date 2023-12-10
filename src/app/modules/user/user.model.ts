@@ -35,19 +35,17 @@ const addressSchema = new Schema<Address>(
   },
 );
 
-// const hobbiesSchema = new Schema<Hobbies>([{ type: String }]);
-
-const userSchema = new Schema<User>({
+const userSchema = new Schema<User, UserModel>({
   userId: { type: Number, unique: true },
   username: { type: String, unique: true },
   password: { type: String, select: false },
-  fullName: { type: fullNameSchema },
+  fullName: fullNameSchema,
   age: { type: Number },
   email: { type: String },
   isActive: { type: Boolean },
-  hobbies: { type: [String] },
-  address: { type: addressSchema },
-  orders: { type: [ordersSchema] },
+  hobbies: [{ type: String }],
+  address: addressSchema,
+  orders: [ordersSchema],
 });
 
 userSchema.pre('save', async function (next) {
